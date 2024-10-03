@@ -1,0 +1,44 @@
+{% extends "base.html" %} 
+{% block title %}Home{% endblock %} 
+{% block content %}
+<h1 align="center">Habits</h1>
+
+<!-- Display Existing Habits -->
+<ul class="list-group list-group-flush" id="habits">
+    {% for habit in user.habits %}
+    <li class="list-group-item">
+        <strong>{{ habit.name }}</strong> - {{ habit.description }} ({{ habit.frequency }})
+        <button type="button" class="close" onClick="deleteHabit(habit.id)" title="Delete Habit">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </li>
+    {% endfor %}
+</ul>
+
+<!-- Form for Adding a New Habit -->
+<form method="POST">
+    <div class="form-group">
+        <label for="name">Habit Name</label>
+        <input type="text" name="name" id="name" class="form-control" placeholder="Enter the habit name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="description">Habit Description</label>
+        <textarea name="description" id="description" class="form-control" placeholder="Describe your habit" rows="3"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="frequency">Habit Frequency</label>
+        <select name="frequency" id="frequency" class="form-control">
+            <option value="Daily">Daily</option>
+            <option value="Weekly">Weekly</option>
+            <option value="Monthly">Monthly</option>
+        </select>
+    </div>
+
+    <div align="center">
+        <button type="submit" class="btn btn-primary">Add Habit</button>
+    </div>
+</form>
+
+{% endblock %}
