@@ -19,7 +19,8 @@ def create_app():
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
 
-    from .models import User, Habit
+    # Import models for habit tracking
+    from .models import User, Habit, HabitLog, Goal, Reminder
     
     with app.app_context():
         db.create_all()

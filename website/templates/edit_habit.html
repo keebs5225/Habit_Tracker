@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Edit Habit{% endblock %}
+{% block content %}
+<h2>{{ habit.name if habit else "New Habit" }}</h2>
+<form method="POST">
+    <div class="form-group">
+        <label for="name">Habit Name</label>
+        <input 
+            type="text" 
+            class="form-control" 
+            id="name" 
+            name="name" 
+            value="{{ habit.name if habit else '' }}" 
+            required 
+            title="Enter the name of the habit"
+            placeholder="Enter habit name">
+    </div>
+    
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea 
+            class="form-control" 
+            id="description" 
+            name="description" 
+            title="Enter a brief description of the habit"
+            placeholder="Enter description">{{ habit.description if habit else '' }}</textarea>
+    </div>
+    
+    <div class="form-group">
+        <label for="frequency">Frequency</label>
+        <select 
+            id="frequency" 
+            name="frequency" 
+            class="form-control" 
+            title="Select how often the habit should be completed">
+            <option value="Daily" {% if habit and habit.frequency == 'Daily' %}selected{% endif %}>Daily</option>
+            <option value="Weekly" {% if habit and habit.frequency == 'Weekly' %}selected{% endif %}>Weekly</option>
+            <option value="Monthly" {% if habit and habit.frequency == 'Monthly' %}selected{% endif %}>Monthly</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label for="start_date">Start Date</label>
+        <input 
+            type="date" 
+            class="form-control" 
+            id="start_date" 
+            name="start_date" 
+            value="{{ habit.start_date.strftime('%Y-%m-%d') if habit else '' }}" 
+            title="Select the start date for the habit">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Save Habit</button>
+</form>
+{% endblock %}

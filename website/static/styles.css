@@ -1,0 +1,270 @@
+/* Basic Reset */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #121212; /* Dark background */
+    color: #e0e0e0; /* Light text color */
+    margin: 0;
+}
+
+/* Profile Section */
+.profile {
+    margin-top: 50px;
+}
+
+.profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+h2 {
+    color: #ffffff; /* Light color for headings */
+}
+
+/* Add Habit Button and Filter Dropdown */
+#add-habit-btn {
+    background-color: #1d3dda;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#add-habit-btn:hover {
+    background-color: #1d3dda;
+}
+
+#filter-dropdown {
+    background-color: #5d5d5d; /* Dark background */
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+}
+
+#filter-dropdown:focus {
+    outline: none;
+}
+
+/* Add Habit Form */
+#add-habit-form {
+    display: none;
+    border: 1px solid #444;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background-color: #1e1e1e;
+}
+
+#add-habit-form form {
+    color: #e0e0e0;
+}
+
+#add-habit-form label {
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+#add-habit-form .form-control,
+#add-habit-form .form-range {
+    background-color: #333;
+    color: #e0e0e0;
+    border: 1px solid #444;
+    border-radius: 5px;
+}
+
+#add-habit-form .form-range {
+    width: 100%;
+}
+
+#add-habit-form output {
+    margin-top: 5px;
+    display: inline-block;
+}
+
+/* Habit List */
+#habit-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#habit-list li {
+    position: relative;
+    padding: 10px;
+    background-color: #1e1e1e; /* Dark background for list items */
+    border: 1px solid #444; /* Dark border */
+    border-radius: 5px;
+    margin: 10px 0;
+    transition: background-color 0.3s;
+    color: #e0e0e0;
+}
+
+#habit-list li .text-bubble {
+    background-color: #d3d3d3; /* Light grey for text bubbles */
+    padding: 8px;
+    border-radius: 12px; /* Round edges for the bubbles */
+    color: #121212; /* Dark text for contrast */
+}
+
+#habit-list li:hover {
+    background-color: #292929; /* Lighter background on hover */
+}
+
+#habit-list li:hover .habit-details {
+    display: block;
+    background-color: #2c2c2c;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#habit-list li form {
+    display: inline;
+}
+
+#habit-list li .context-menu {
+    display: none;
+}
+
+#habit-list li:hover .context-menu {
+    display: block;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+/* Habit Details */
+.habit-details {
+    display: none;
+}
+
+/* Delete Button */
+.close {
+    color: #888;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    transition: color 0.3s;
+}
+
+.close:hover {
+    color: #bbb; /* Lighter grey on hover */
+}
+
+/* Edit Habit Page */
+#edit-habit-form {
+    margin-top: 20px;
+}
+
+#edit-habit-form label {
+    color: #908888;
+    display: block;
+    margin-bottom: 5px;
+}
+
+#edit-habit-form input,
+#edit-habit-form select,
+#edit-habit-form textarea {
+    background-color: #333;
+    color: #e0e0e0;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    width: 100%;
+}
+
+#edit-habit-form textarea {
+    height: 150px;
+    resize: none;
+}
+
+#edit-habit-form button {
+    background-color: #1d3dda;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#edit-habit-form button:hover {
+    background-color: #1d3dda;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #1d3dda;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #1d3dda;
+}
+
+.btn-sm {
+    font-size: 0.875rem;
+    padding: 5px 10px;
+}
+
+/* Toggle Button */
+.toggle-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #333333;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.toggle-btn:hover {
+    background-color: #5c5c5c;
+}
+
+/* Screen Reader Only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Context Menu Styling */
+.context-menu a {
+    color: white;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    background-color: #333;
+}
+
+.context-menu a:hover {
+    background-color: #444;
+}
+
+/* Status Dropdown */
+#habit-list select[name="status"] {
+    background-color: #5d5d5d; /* Dark background */
+    color: #e0e0e0; /* Light text color */
+    border: 1px solid #444; /* Border color */
+    border-radius: 5px; /* Rounded corners */
+}
+
+#habit-list select[name="status"]:focus {
+    outline: none; /* Remove default focus outline */
+}

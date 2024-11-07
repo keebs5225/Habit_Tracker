@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Goals{% endblock %}
+{% block content %}
+<h2>Your Goals</h2>
+{% for goal in goals %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">{{ goal.habit.name }} ({{ goal.timeframe }})</h5>
+        <p>Target: {{ goal.target_count }} times</p>
+        <p>Status: {{ "Achieved" if goal.status else "In Progress" }}</p>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
