@@ -89,7 +89,7 @@ function toggleAddHabitForm() {
   form.style.display = form.style.display === "none" ? "block" : "none";
 }
 
-// Increment and update habit counter
+// Increment and update habit counter TODO
 function incrementHabitCounter(item) {
   const habitId = item.getAttribute('data-habit-id');
   let counter = parseInt(item.getAttribute('data-counter'), 10) || 0;
@@ -113,37 +113,13 @@ function incrementHabitCounter(item) {
   });
 }
 
-// Update habit counter display
+// Update habit counter display TODO
 function updateHabitCounterDisplay(item, counter) {
   const counterDisplay = item.querySelector('.habit-counter-display');
   counterDisplay.textContent = `Times Completed: ${counter}`;
 }
 
-// Complete habit function
-function completeHabit(habitId) {
-  fetch(`/complete-habit/${habitId}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      const countElement = document.getElementById(`times-completed-${habitId}`);
-      countElement.textContent = data.times_completed;
-      alert("Habit marked as complete!");
-    } else {
-      alert(data.message);
-    }
-  })
-  .catch(error => {
-    console.error("Error completing habit:", error);
-    alert("An error occurred. Please try again.");
-  });
-}
 
-// Sorting habits
 // Sorting habits
 function sortHabitsBy(criteria, order) {
   const habitList = document.getElementById("habit-list");
@@ -190,26 +166,33 @@ function sortHabitsBy(criteria, order) {
   habits.forEach(item => habitList.appendChild(item));
 }
 
-// Update habit deadline display
+// Update habit deadline display TODO
 function updateHabitDeadlineDisplay(item) {
-  const startDate = new Date(item.getAttribute('data-start-date'));
+  const startDate = new Date(item.getAttribute('data-start-date'));  // Extract start date
   const deadlineElement = item.querySelector('.habit-deadline-display');
+  const frequency = item.getAttribute('data-frequency').toLowerCase();  // Extract frequency
 
-  let deadline = new Date(startDate);
-  const frequency = item.getAttribute('data-frequency').toLowerCase();
+  let deadline = new Date(startDate);  // Initialize the deadline as the start date
 
+  // Calculate the next deadline based on frequency
   if (frequency === 'daily') {
-    deadline.setDate(deadline.getDate() + 1);
+    deadline.setDate(deadline.getDate() + 1);  // Add 1 day for daily habits
   } else if (frequency === 'weekly') {
-    deadline.setDate(deadline.getDate() + 7);
+    deadline.setDate(deadline.getDate() + 7);  // Add 7 days for weekly habits
   } else if (frequency === 'monthly') {
-    deadline.setMonth(deadline.getMonth() + 1);
+    deadline.setMonth(deadline.getMonth() + 1);  // Add 1 month for monthly habits
   }
 
+  // Display the calculated deadline
   deadlineElement.textContent = `Deadline: ${deadline.toLocaleDateString()}`;
 }
 
-// Function to update habits at midnight (reset counter, status)
+// Iterate through all habit items to update their deadline display
+document.querySelectorAll('.habit-item').forEach(item => {
+  updateHabitDeadlineDisplay(item);  // Update deadline for each habit item
+});
+
+// Function to update habits at midnight (reset counter, status) TODO
 function updateHabitsAtMidnight() {
   const currentHour = new Date().getHours();
   const currentMinute = new Date().getMinutes();

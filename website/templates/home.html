@@ -84,7 +84,7 @@
           <p>{{ item.habit.description }}</p>
         {% endif %}
         {% if item.habit.start_date %}
-          Start Date: {{ item.habit.start_date.strftime('%d-%m-%Y') }}
+          Start Date: {{ item.habit.start_date.strftime('%m-%d-%Y') }}
         {% endif %}
       </div>
 
