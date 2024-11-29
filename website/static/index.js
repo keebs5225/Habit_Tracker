@@ -89,7 +89,7 @@ function toggleAddHabitForm() {
   form.style.display = form.style.display === "none" ? "block" : "none";
 }
 
-// Increment and update habit counter TODO
+// Increment and update habit counter
 function incrementHabitCounter(item) {
   const habitId = item.getAttribute('data-habit-id');
   let counter = parseInt(item.getAttribute('data-counter'), 10) || 0;
@@ -113,12 +113,11 @@ function incrementHabitCounter(item) {
   });
 }
 
-// Update habit counter display TODO
+// Update habit counter display
 function updateHabitCounterDisplay(item, counter) {
   const counterDisplay = item.querySelector('.habit-counter-display');
   counterDisplay.textContent = `Times Completed: ${counter}`;
 }
-
 
 // Sorting habits
 function sortHabitsBy(criteria, order) {
@@ -166,7 +165,7 @@ function sortHabitsBy(criteria, order) {
   habits.forEach(item => habitList.appendChild(item));
 }
 
-// Update habit deadline display TODO
+// Update habit deadline display
 function updateHabitDeadlineDisplay(item) {
   const startDate = new Date(item.getAttribute('data-start-date'));  // Extract start date
   const deadlineElement = item.querySelector('.habit-deadline-display');
@@ -192,7 +191,7 @@ document.querySelectorAll('.habit-item').forEach(item => {
   updateHabitDeadlineDisplay(item);  // Update deadline for each habit item
 });
 
-// Function to update habits at midnight (reset counter, status) TODO
+// Function to update habits at midnight (reset counter, status)
 function updateHabitsAtMidnight() {
   const currentHour = new Date().getHours();
   const currentMinute = new Date().getMinutes();
@@ -204,22 +203,21 @@ function updateHabitsAtMidnight() {
       counterElement.textContent = "Times Completed: 0";
       item.setAttribute('data-counter', 0);
 
-      // Reset Status to 'Todo'
-      const statusButton = item.querySelector('.status-toggle-btn');
-      if (statusButton.textContent.trim() === 'Done') {
-        statusButton.textContent = 'Todo';
-        statusButton.classList.toggle('btn-secondary', true);
-        statusButton.classList.toggle('btn-success', false);
-
-        // Send reset status to server
-        fetch(`/update-habit-status/${habitId}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ status: 'Todo' })
-        });
+      // Reset habit status
+      const button = item.querySelector('.status-toggle-btn');
+      if (button.textContent.trim() === 'Done') {
+        button.textContent = 'Todo';
+        button.classList.add('btn-secondary');
+        button.classList.remove('btn-success');
       }
+
+      // Optionally, update on the server
+      fetch(`/reset-habit-status/${habitId}`, {
+        method: 'POST'
+      }).catch(error => {
+        console.error("Error resetting habit status:", error);
+      });
     });
   }
 }
+
