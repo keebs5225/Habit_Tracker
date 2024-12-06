@@ -2,51 +2,49 @@
 {% block title %}Habit Tracker{% endblock %}
 
 {% block content %}
-<h1 align="center">Your Habit Tracker</h1>
+  <h1 align="center">Your Habit Tracker</h1>
 
 <!-- Add Habit Button and Sort Dropdown -->
 <div class="d-flex justify-content-between mb-3">
-  <!-- Button to toggle the Add Habit form -->
   <div>
     <button id="add-habit-btn" class="btn btn-primary" onclick="toggleAddHabitForm()">Add Habit</button>
   </div>
-  <!-- Dropdown to sort the habits -->
   <div>
     <label for="sort-dropdown" class="sr-only">Sort by</label>
     <select id="sort-dropdown" class="form-control" title="Sort habits by name, frequency, or status" onchange="handleSortChange()">
       <option value="">Sort by...</option>
-      <option value="name-asc">A-Z (Name)</option>
-      <option value="name-desc">Z-A (Name)</option>
-      <option value="status-asc">Done (Status)</option>
-      <option value="status-desc">Todo (Status)</option>
-      <option value="deadline-asc">Closest (Deadline)</option>
-      <option value="deadline-desc">Farthest (Deadline)</option>
+      <option value="name-asc">Name (A-Z)</option>
+      <option value="name-desc">Name (Z-A)</option>
+      <option value="status-asc">Status (Done)</option>
+      <option value="status-desc">Status (Todo)</option>
+      <option value="deadline-asc">Deadline (Closest)</option>
+      <option value="deadline-desc">Deadline (Farthest)</option>
     </select>
   </div>
 </div>  
 
-<!-- Add Habit Form -->
-<div id="add-habit-form" style="display: none; border: 1px solid #ccc; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-  <form method="POST" action="/add-habit">
-    <label for="name">Habit Name:</label>
-    <input type="text" name="name" id="name" class="form-control" required>
-    
-    <label for="frequency">Frequency:</label>
-    <select id="frequency" name="frequency" class="form-control" onchange="updateHabitFrequency()" required>
-      <option value="Daily">Daily</option>
-      <option value="Weekly">Weekly</option>
-      <option value="Monthly">Monthly</option>
-    </select>
-    
-    <label for="description">Description (optional):</label>
-    <textarea name="description" id="description" class="form-control" rows="3" placeholder="Write a short description..."></textarea>
-    
-    <label for="start_date">Start Date:</label>
-    <input type="date" name="start_date" id="start_date" class="form-control" required>
+  <!-- Add Habit Form -->
+  <div id="add-habit-form" style="display: none; border: 1px solid #ccc; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+    <form method="POST" action="/add-habit">
+      <label for="name">Habit Name:</label>
+      <input type="text" name="name" id="name" class="form-control" required>
+      
+      <label for="frequency">Frequency:</label>
+      <select id="frequency" name="frequency" class="form-control" onchange="updateHabitFrequency()" required>
+        <option value="Daily">Daily</option>
+        <option value="Weekly">Weekly</option>
+        <option value="Monthly">Monthly</option>
+      </select>
+      
+      <label for="description">Description (optional):</label>
+      <textarea name="description" id="description" class="form-control" rows="3" placeholder="Write a short description..."></textarea>
+      
+      <label for="start_date">Start Date:</label>
+      <input type="date" name="start_date" id="start_date" class="form-control" required>
 
-    <button type="submit" class="btn btn-primary mt-3">Submit</button>
-  </form>
-</div>
+      <button type="submit" class="btn btn-primary mt-3">Submit</button>
+    </form>
+  </div>
 
 <!-- Habit List -->
 <ul class="list-group list-group-flush" id="habit-list">
@@ -58,28 +56,27 @@
         data-start-date="{{ item.habit.start_date }}" 
         data-status="{{ item.status }}">
 
-      <!-- Habit name and frequency -->
-      <strong>{{ item.habit.name }}</strong> ({{ item.habit.frequency }}) 
+      <strong>{{ item.habit.name }}</strong>
+      ({{ item.habit.frequency }}) 
 
-      <!-- Deadline display -->
-      <span class="habit-deadline-display">Deadline: Calculating...</span>
+      <!-- Deadline display element -->
+      <span class="habit-deadline-display">Deadline: {{ item.habit.start_date.strftime('%d-%m-%Y') }}</span>
 
-      <!-- Status toggle button -->
+      <!-- Habit Status Toggle Button -->
       <button class="status-toggle-btn btn btn-sm {% if item.status %}btn-success{% else %}btn-secondary{% endif %}"
               type="button" data-habit-id="{{ item.id }}"
               onclick="toggleHabitStatus(this, this)">
         {% if item.status %}Done{% else %}Todo{% endif %}
       </button>
 
-      <!-- Edit button -->
       <div class="context-menu" id="context-menu-{{ item.habit.id }}">
         <a href="{{ url_for('views.edit_habit', habit_id=item.habit.id) }}" class="btn btn-sm btn-secondary">Edit</a>
       </div>
 
-      <!-- Habit details (optional) -->
+      <!-- Optional Habit Details -->
       <div class="habit-details">
         {% if item.habit.start_date %}
-          Start Date: {{ item.habit.start_date.strftime('%m-%d-%Y') }}
+          Start Date: {{ item.habit.start_date.strftime('%d-%m-%Y') }}
         {% endif %}
         {% if item.habit.times_completed %}
           Times Completed: {{ item.habit.times_completed }}
@@ -89,7 +86,7 @@
         {% endif %}
       </div>
 
-      <!-- Remove habit form -->
+      <!-- Habit Removal Form -->
       <form action="/delete-habitlist/{{ item.id }}" method="POST" class="inline-form">
         <button type="submit" class="close" title="Remove Habit">
           <span aria-hidden="true">&times;</span>

@@ -26,22 +26,6 @@ h2 {
     color: #ffffff; /* Light color for headings */
 }
 
-/* Sort Dropdown (for habit sorting) */
-#sort-dropdown {
-    background-color: #5d5d5d; /* Dark background */
-    color: white;
-    padding: 8px;
-    border-radius: 5px;
-    border: none;
-    width: 200px; /* Adjust the width of the dropdown */
-    margin-top: 10px;
-    cursor: pointer;
-}
-
-#sort-dropdown:focus {
-    outline: none;
-}
-
 /* Add Habit Button and Filter Dropdown */
 #add-habit-btn {
     background-color: #1d3dda;
@@ -233,19 +217,19 @@ h2 {
     padding: 5px 10px;
 }
 
-/* Toggle Button */
-.toggle-btn {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #333333;
+/* Toggle Button States */
+.toggle-btn.todo {
+    background-color: #797878; 
     color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2rem;
+}
+
+.toggle-btn.done {
+    background-color: #2ecc70f4; /* Green for Done */
+    color: white;
 }
 
 .toggle-btn:hover {
-    background-color: #5c5c5c;
+    opacity: 0.9; 
 }
 
 /* Screen Reader Only */
@@ -283,4 +267,57 @@ h2 {
 
 #habit-list select[name="status"]:focus {
     outline: none; /* Remove default focus outline */
+}
+
+/* Edit Habit Page */
+#edit-habit-form {
+    margin-top: 20px;
+    background-color: #1e1e1e; /* Match the dark background of the project */
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #444;
+}
+
+#edit-habit-form label {
+    color: #e0e0e0; /* Light text color for labels */
+    display: block;
+    margin-bottom: 5px;
+}
+
+#edit-habit-form input,
+#edit-habit-form select,
+#edit-habit-form textarea {
+    background-color: #333; /* Dark background for inputs */
+    color: #e0e0e0; /* Light text color */
+    padding: 10px;
+    border-radius: 12px; /* Rounded corners for input bubbles */
+    border: 1px solid #444;
+    width: 100%;
+    box-sizing: border-box; /* Ensure padding does not break the layout */
+    margin-bottom: 15px; /* Space between form fields */
+}
+
+#edit-habit-form input[type="text"]:focus,
+#edit-habit-form select:focus,
+#edit-habit-form textarea:focus {
+    outline: none; /* Remove default focus outline */
+    border-color: #1d3dda; /* Highlight border on focus */
+}
+
+#edit-habit-form textarea {
+    height: 150px;
+    resize: none;
+}
+
+#edit-habit-form button {
+    background-color: #1d3dda;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#edit-habit-form button:hover {
+    background-color: #1d3dda;
 }

@@ -42,44 +42,55 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(updateHabitsAtMidnight, 1000 * 60 * 60); // Check every hour
 });
 
-// Function to toggle habit status
-function toggleHabitStatus(button, item) {
-  const habitId = item.getAttribute('data-habit-id');
-  let currentStatus = button.textContent.trim(); // "Todo" or "Done"
-  const newStatus = (currentStatus === 'Todo') ? 'Done' : 'Todo';
 
-  // Update the status text on the button immediately for better user experience
+// Toggle Habit Status
+function toggleHabitStatus(button) {
+  const habitId = button.getAttribute('data-habit-id'); // Get the habit ID
+  if (!habitId) {
+      console.error("Habit ID is undefined");
+      return;
+  }
+
+  // Determine the current status
+  const currentStatus = button.textContent.trim() === 'Done' ? 'Done' : 'Todo';
+  
+  // Optimistically update the button UI
+  const newStatus = currentStatus === 'Done' ? 'Todo' : 'Done';
+  button.classList.toggle('btn-success');
+  button.classList.toggle('btn-secondary');
   button.textContent = newStatus;
-  button.classList.toggle('btn-secondary', newStatus === 'Todo');
-  button.classList.toggle('btn-success', newStatus === 'Done');
 
-  // Send update to the server to persist the status change
+  // Send the POST request
   fetch(`/update-habit-status/${habitId}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ status: newStatus })
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ status: newStatus }),
   })
-  .then(response => response.json())
+  .then(response => {
+      if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+  })
   .then(data => {
-    if (data.success) {
-      // Successfully updated on the server, no further action needed
-    } else {
-      // Rollback to previous status if the update failed
-      alert(data.message);
-      button.textContent = currentStatus; // Revert button text
-      button.classList.toggle('btn-secondary', currentStatus === 'Todo');
-      button.classList.toggle('btn-success', currentStatus === 'Done');
-    }
+      if (!data.success) {
+          // If the update fails, revert the optimistic change
+          console.error("Failed to update habit status:", data.message);
+          button.classList.toggle('btn-success');
+          button.classList.toggle('btn-secondary');
+          button.textContent = currentStatus; // Revert to original state
+      }
   })
   .catch(error => {
-    console.error("Error updating status:", error);
-    alert("An error occurred. Please try again.");
-    // Rollback to previous status in case of an error
-    button.textContent = currentStatus; // Revert button text
-    button.classList.toggle('btn-secondary', currentStatus === 'Todo');
-    button.classList.toggle('btn-success', currentStatus === 'Done');
+      // Handle network or other errors
+      console.error("Error:", error);
+
+      // Revert the optimistic change
+      button.classList.toggle('btn-success');
+      button.classList.toggle('btn-secondary');
+      button.textContent = currentStatus; // Revert to original state
   });
 }
 
@@ -113,13 +124,34 @@ function incrementHabitCounter(item) {
   });
 }
 
-// Update habit counter display
+// Display the habit counter
 function updateHabitCounterDisplay(item, counter) {
-  const counterDisplay = item.querySelector('.habit-counter-display');
-  counterDisplay.textContent = `Times Completed: ${counter}`;
+  const counterElement = item.querySelector('.habit-counter');
+  if (counterElement) {
+    counterElement.textContent = `Completed: ${counter}`;
+  }
 }
 
-// Sorting habits
+// Update habit deadline display based on frequency
+function updateHabitDeadlineDisplay(item) {
+  const frequency = item.getAttribute('data-frequency').toLowerCase();
+  const startDate = new Date(item.getAttribute('data-start-date'));
+  let deadline = new Date(startDate);
+
+  if (frequency === 'daily') {
+    deadline.setDate(deadline.getDate() + 1);
+  } else if (frequency === 'weekly') {
+    deadline.setDate(deadline.getDate() + 7);
+  } else if (frequency === 'monthly') {
+    deadline.setMonth(deadline.getMonth() + 1);
+  }
+
+  const deadlineDisplay = item.querySelector('.habit-deadline-display');
+  if (deadlineDisplay) {
+    deadlineDisplay.textContent = `Deadline: ${deadline.toDateString()}`;
+  }
+}
+
 function sortHabitsBy(criteria, order) {
   const habitList = document.getElementById("habit-list");
   const habits = Array.from(habitList.children);
@@ -165,59 +197,4 @@ function sortHabitsBy(criteria, order) {
   habits.forEach(item => habitList.appendChild(item));
 }
 
-// Update habit deadline display
-function updateHabitDeadlineDisplay(item) {
-  const startDate = new Date(item.getAttribute('data-start-date'));  // Extract start date
-  const deadlineElement = item.querySelector('.habit-deadline-display');
-  const frequency = item.getAttribute('data-frequency').toLowerCase();  // Extract frequency
-
-  let deadline = new Date(startDate);  // Initialize the deadline as the start date
-
-  // Calculate the next deadline based on frequency
-  if (frequency === 'daily') {
-    deadline.setDate(deadline.getDate() + 1);  // Add 1 day for daily habits
-  } else if (frequency === 'weekly') {
-    deadline.setDate(deadline.getDate() + 7);  // Add 7 days for weekly habits
-  } else if (frequency === 'monthly') {
-    deadline.setMonth(deadline.getMonth() + 1);  // Add 1 month for monthly habits
-  }
-
-  // Display the calculated deadline
-  deadlineElement.textContent = `Deadline: ${deadline.toLocaleDateString()}`;
-}
-
-// Iterate through all habit items to update their deadline display
-document.querySelectorAll('.habit-item').forEach(item => {
-  updateHabitDeadlineDisplay(item);  // Update deadline for each habit item
-});
-
-// Function to update habits at midnight (reset counter, status)
-function updateHabitsAtMidnight() {
-  const currentHour = new Date().getHours();
-  const currentMinute = new Date().getMinutes();
-  if (currentHour === 0 && currentMinute === 0) {
-    document.querySelectorAll('.habit-item').forEach((item) => {
-      // Reset Times Completed counter
-      const habitId = item.getAttribute('data-habit-id');
-      const counterElement = item.querySelector('.habit-counter-display');
-      counterElement.textContent = "Times Completed: 0";
-      item.setAttribute('data-counter', 0);
-
-      // Reset habit status
-      const button = item.querySelector('.status-toggle-btn');
-      if (button.textContent.trim() === 'Done') {
-        button.textContent = 'Todo';
-        button.classList.add('btn-secondary');
-        button.classList.remove('btn-success');
-      }
-
-      // Optionally, update on the server
-      fetch(`/reset-habit-status/${habitId}`, {
-        method: 'POST'
-      }).catch(error => {
-        console.error("Error resetting habit status:", error);
-      });
-    });
-  }
-}
 
